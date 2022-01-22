@@ -22,20 +22,8 @@ public class Conver extends javax.swing.JFrame {
         caja_gradosF = new javax.swing.JTextField();
         boton_conversor = new javax.swing.JButton();
 
+        // la siguiente línea genera la ventana de aplicación vacía, sin elementos:
         getContentPane().setLayout(null);
-
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            
-            public void windowOpened(java.awt.event.WindowEvent evt) {
-                
-                formWindowOpened(evt);
-            }
-            
-            // se define estrictamente lo que el manejador de eventos debe controlar cuando se quiere cerrar la ventana.
-            public void windowClosing(java.awt.event.WindowEvent evt) {
-                exitForm(evt);
-            }
-        });
 
         // de izquierda a derecha y de arriba hacia abajo, primero situamos el cartel de "Grados centigrados":
         cartel_gradosC.setText("Grados centigrados");
@@ -71,7 +59,30 @@ public class Conver extends javax.swing.JFrame {
         boton_conversor.setBounds(180, 120, 144, 20);
 
         getContentPane().add(boton_conversor);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                
+                formWindowOpened(evt);
+            }
+            
+            // se define lo que el manejador de eventos debe controlar cuando se quiere cerrar la ventana.
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                exitForm(evt);
+            }
+        });
 
+        // se asocia el método a ejecutar con el escuchador de acción que estará pendiente de que se oprima la tecla "Enter".
+        java.awt.event.ActionListener al = new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+
+                teclaEnter(evt);
+            }
+        };
+
+        caja_gradosC.addActionListener(al);
+        caja_gradosF.addActionListener(al);
         java.awt.event.KeyAdapter kl = new java.awt.event.KeyAdapter() {
 
             public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -94,7 +105,7 @@ public class Conver extends javax.swing.JFrame {
         caja_gradosC.addFocusListener(fl);
         caja_gradosF.addFocusListener(fl);
 
-        // definimos el comportamiento del botón al hacerse click sobre él
+        // definimos el comportamiento del botón al hacerse click sobre él:
         boton_conversor.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -151,6 +162,40 @@ public class Conver extends javax.swing.JFrame {
         System.exit(0);
     }
 
+    private void teclaEnter(java.awt.event.ActionEvent evt) {
+
+        try {
+            double grados = 0.0;
+            String sGrados = "";
+            Object obj_caja = evt.getSource();
+            
+            // en caso de que el usuario ingrese un dato en la caja de grados centígrados:
+            if (obj_caja == caja_gradosC) {
+                sGrados = caja_gradosC.getText();
+                if (sGrados.length() == 0) {
+                    return;
+                }
+                grados = (Double.parseDouble(caja_gradosC.getText()) * 9.0 / 5.0) + 32.0;
+                String texto = String.format("%.2f", grados);
+                caja_gradosF.setText(texto);
+            }
+
+            // en caso de que el usuario ingrese un dato en la caja de grados fahrenheit:
+            if (obj_caja == caja_gradosF) {
+                sGrados = caja_gradosF.getText();
+                if (sGrados.length() == 0) {
+                    return;
+                }
+                grados = (Double.parseDouble(caja_gradosF.getText()) - 32.0) * 5.0 / 9.0;
+                String texto = String.format("%.2f", grados);
+                caja_gradosC.setText(texto);
+            }
+        }
+        catch (NumberFormatException e) {
+            caja_gradosC.setText("0.0");
+            caja_gradosF.setText("32.0");
+        }
+    }
     public static void main(String[] args) {
         
         // definimos el L&F de la ventana de la aplicación:
