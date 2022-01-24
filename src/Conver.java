@@ -2,8 +2,8 @@ public class Conver extends javax.swing.JFrame {
     
     private javax.swing.JLabel cartel_gradosC;
     private javax.swing.JLabel cartel_gradosF;
-    private javax.swing.JTextField caja_gradosC;
-    private javax.swing.JTextField caja_gradosF;
+    private JTextFieldDouble caja_gradosC;
+    private JTextFieldDouble caja_gradosF;
     private javax.swing.JButton boton_conversor;
     private Object obj_caja;
 
@@ -18,8 +18,8 @@ public class Conver extends javax.swing.JFrame {
 
         cartel_gradosC = new javax.swing.JLabel();
         cartel_gradosF = new javax.swing.JLabel();
-        caja_gradosC = new javax.swing.JTextField();
-        caja_gradosF = new javax.swing.JTextField();
+        caja_gradosC = new JTextFieldDouble();
+        caja_gradosF = new JTextFieldDouble();
         boton_conversor = new javax.swing.JButton();
 
         // la siguiente línea genera la ventana de aplicación vacía, sin elementos:
@@ -236,6 +236,40 @@ public class Conver extends javax.swing.JFrame {
         
         // acción que debe ocurrir cuando se da el evento "cerrar ventana" (hacer click en la "X" del margen superior derecho).
         System.exit(0);
+    }
+
+    public class JTextFieldDouble extends javax.swing.JTextField {
+    
+        public JTextFieldDouble() {
+    
+            // constructor sin parámetros.
+        }
+        
+        protected javax.swing.text.Document createDefaultModel() {
+    
+            return new PlainDocumentDouble();
+        }
+    
+        protected class PlainDocumentDouble extends javax.swing.text.PlainDocument {
+    
+            public void insertString(int offs, String str, javax.swing.text.AttributeSet a) throws javax.swing.text.BadLocationException {
+    
+                char[] fuente = str.toCharArray();
+                char[] resultado = new char[fuente.length];
+                int j = 0;
+    
+                for (int i = 0; i < fuente.length; i++) {
+                    if ((fuente[i] >= '0' && fuente[i] <= '9') || fuente[i] == '.' || fuente[i] == ',' || fuente[i] == '+' || fuente[i] == '-') {
+                        resultado[j++] = fuente[i];
+                    }
+                    else {
+                        java.awt.Toolkit.getDefaultToolkit().beep();
+                    }
+                }
+    
+                super.insertString(offs, new String(resultado, 0, j), a);
+            }       
+        }
     }
 
     public static void main(String[] args) {
